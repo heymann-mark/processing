@@ -1,0 +1,395 @@
+/*
+*TRex Runner game
+*/
+//Global Variables
+int DINO_H = 100;
+int birdX = 2000;
+int birdY = 200;
+int bgX = 0;
+int cactus0X = 2000;
+int cactus1X = 3000;
+int cactus2X = 4000;
+int cactus3X = 5000;
+int cactusY = 230;
+int BIRD_SPEED = 8;
+int score = 0;
+boolean isRunning = false;
+boolean isDucking = false;
+boolean isFiring = false;
+boolean whichRunner = false;
+boolean whichBird = false;
+float dinoX  = 0;
+float dinoY = 330;
+int DINO_X = 100;
+int DINO_Y = 330;
+float dino_y_speed = 0;
+float GRAV = 1.1;
+int WIDTH = 1800;
+int cloud0X = 1800;
+int cloud1X = 2500;
+int cloud2X = 3000;
+int cloud3X = 3500;
+int cloud4X = 3800;
+int cloud0Y = 100;
+int cloud1Y = 200;
+int cloud2Y = 250;
+int cloud3Y = 50;
+int cloud4Y = 120;
+float startFrame = 0;
+int fireTimer = 300;
+int highScore = 0;
+String cloudUrl = "https://i.ibb.co/sRd7b3g/Cloud.png";
+String fire1Url = "https://i.ibb.co/TLL7cSR/pt-Fireball1.png";
+String fire2Url = "https://i.ibb.co/grbnDbG/pt-Fireball2.png";
+String bgUrl = "https://i.ibb.co/0B27pQd/ground.png";
+String dinoStopUrl = "https://i.ibb.co/Gd0HFn8/tp-Dino-Stop.png";
+String runningDino1Url = "https://i.ibb.co/CVf4ddV/tprun-Dino1.png";
+String runningDino2Url = "https://i.ibb.co/37m0tDn/tprun-Dino2.png";
+String fireDino1Url = "https://i.ibb.co/fSjgz0f/tpfire-Dino1.png";
+String fireDino2Url = "https://i.ibb.co/560LXR1/tpfire-Dino2.png";
+String duckingDino1Url = "https://i.ibb.co/9svrs8b/tpducking-Dino1.png";
+String duckingDino2Url = "https://i.ibb.co/fS9NxVd/tpducking-Dino2.png";
+String deadDinoUrl  = "https://i.ibb.co/ZTJLx6P/tpdead-Dino.png";
+String resetGameUrl = "https://i.ibb.co/yRN4rLB/gameOver.png";
+String cactus0Url = "https://i.ibb.co/KzPxnXc/output-onlinepngtools-1.png";
+String cactus1Url = "https://i.ibb.co/R4VRxpg/output-onlinepngtools-2.png"; 
+String cactus2Url = "https://i.ibb.co/hXDCSZ6/output-onlinepngtools-3.png"; 
+String cactus3Url = "https://i.ibb.co/j6xGkR0/output-onlinepngtools.png";
+String bird1Url = "https://i.ibb.co/rk3YQKP/tpbird1.png";
+String bird2Url = "https://i.ibb.co/LZfT9yw/tpbird2.png";
+PImage c0;
+PImage c1;
+PImage c2;
+PImage c3;
+PImage cloud;
+
+PImage bg;
+PImage dinoStop;
+PImage runningDino1;
+PImage runningDino2;
+PImage fireDino1;
+PImage fireDino2;
+PImage fire1;
+PImage fire2;
+PImage duckingDino1;
+PImage duckingDino2;
+PImage deadDino;
+PImage dino;
+PImage resetGame;
+PImage cactus0;
+PImage cactus1; 
+PImage cactus2; 
+PImage cactus3;
+PImage bird1;
+PImage bird2;
+ArrayList<PImage> cacti = new ArrayList<>();
+ArrayList<PImage> clouds = new ArrayList<>();
+
+void setup(){
+    textAlign(CENTER, CENTER);
+    size(1800, 450);
+    cloud = loadImage(cloudUrl);
+    for(int i = 0; i < 8;i++){
+        clouds.add(cloud);
+    }
+    
+    fire1 = loadImage(fire1Url);
+    fire2 = loadImage(fire2Url);
+    bg = loadImage(bgUrl);
+    dinoStop = loadImage(dinoStopUrl);
+    runningDino1 = loadImage(runningDino1Url);
+    runningDino2 = loadImage(runningDino2Url);
+    fireDino1 = loadImage(fireDino1Url);
+    fireDino2 = loadImage(fireDino2Url);
+    duckingDino1 = loadImage(duckingDino1Url);
+    duckingDino2  = loadImage(duckingDino2Url);
+    deadDino = loadImage(deadDinoUrl);
+    resetGame = loadImage(resetGameUrl);
+    cactus0  = loadImage(cactus0Url);//to use for image storage
+    cactus1 = loadImage(cactus1Url); 
+    cactus2 = loadImage(cactus2Url); 
+    cactus3 = loadImage(cactus3Url);
+    bird1 = loadImage(bird1Url);
+    bird2 = loadImage(bird2Url);
+    cacti.add(cactus0);
+    cacti.add(cactus1);
+    cacti.add(cactus2);
+    cacti.add(cactus3);
+    c0  = loadImage(cactus0Url);//to show on screen
+    c1 = loadImage(cactus1Url); 
+    c2 = loadImage(cactus2Url); 
+    c3 = loadImage(cactus3Url);
+}
+void mousePressed(){
+    if(mouseX > width/2 - 36 && mouseX < width/2 + 36 && mouseY > height /2 - 32 && mouseY <height/2 + 32   && !isRunning)
+        reset();
+}
+
+void reset(){
+    cactus0X = 2000;
+    cactus1X = 3000;
+    cactus2X = 4000;
+    cactus3X = 5000;
+    dinoX = DINO_X;
+    isRunning = true;
+    birdX = 2000;
+    score = 0;
+}
+void gameOver(){
+    dino_y_speed = 0;
+    isRunning = false;   
+    textSize(50);
+    text("game over", 900, 100);   
+    image(resetGame,width/2 - 36, height/2 - 32);   
+}
+
+void keyPressed(){
+    if(key == ' ' && dinoY >= 330 && dinoX == 100 && isRunning){
+        dino_y_speed = -27;
+    }
+    if(key == ' ' && dinoY >= 330 && dinoX < 100){
+        isRunning = true;
+    }
+   
+     if(keyCode == DOWN && dinoY == DINO_Y)
+        isDucking = true;
+   
+     if(keyCode == RIGHT){
+        if(!isFiring && fireTimer > 300 && dinoX == DINO_X && dinoY >= DINO_Y && !isDucking){
+            fireTimer = 0;
+            startFrame = frameCount;
+            isFiring = true;
+       }
+    }    
+    
+     
+}
+
+void keyReleased(){
+    if(keyCode == DOWN)
+        isDucking = false;
+   
+    if(keyCode == RIGHT)
+        isFiring = false;
+    
+}
+void draw(){
+    fireTimer++;
+    show_bg();
+    cloudControls();
+    birdControls();
+    dinoControls();  
+    cactusControl();
+ 
+    if(isRunning)
+        score++;
+    if(highScore < score)
+        highScore = score;
+    text(highScore, 1400, 100);     
+    text(score, 1600, 100);
+} 
+void show_bg(){
+    background(255);
+   image(bg,bgX, 188);
+   if(isRunning)
+    bgX = bgX - 10;
+        
+    
+    image(bg, bgX + 1800, 188);
+    if(bgX == -1800)
+        bgX = 0;
+    
+}
+
+void cloudControls(){
+    image(cloud, cloud0X,  cloud0Y);
+    image(cloud, cloud1X,  cloud1Y);
+    image(cloud, cloud2X,  cloud2Y);
+    image(cloud, cloud3X,  cloud3Y);
+    image(cloud, cloud4X,  cloud4Y);
+    if(isRunning){    
+        cloud0X -= 10; 
+        cloud1X -= 10; 
+        cloud2X -= 10; 
+        cloud3X -= 10;  
+        cloud4X -= 10;
+    }
+    if(cloud0X < -100){
+        cloud0Y = (int)random(50, 200);
+        cloud0X = 2000;}
+    if(cloud1X < -100){
+        cloud1Y = (int)random(50, 200);
+        cloud1X = 2000;}
+    if(cloud2X < -100){
+        cloud2Y = (int)random(50, 200);
+        cloud2X = 2000;}
+    if(cloud3X < -100){
+        cloud3Y = (int)random(50, 200);
+        cloud3X = 2000;}
+    if(cloud4X < -100){
+        cloud4Y = (int)random(50, 200);
+        cloud4X = 2000;}
+}
+void dinoControls(){
+   
+    if(!isRunning && score == 0){
+        image(dinoStop, dinoX,dinoY);
+    }else if(!isRunning && score > 0){
+        image(deadDino, dinoX,dinoY);
+    }
+    textSize(50);
+   
+    if(frameCount%6 == 0)
+        whichRunner = !whichRunner;
+    if(isRunning){   
+        if(dinoX < 100){
+            dinoY = DINO_Y;
+            dinoX++;
+        }
+        if(isDucking){
+            
+            if(whichRunner){
+                image(duckingDino1, dinoX, dinoY);
+            }else{
+                image(duckingDino2, dinoX, dinoY);
+            } 
+        }else if(isFiring){
+            
+            if(frameCount - startFrame < 50){
+                image(fire1, 175,325);
+            }else if(frameCount - startFrame < 100){
+                image(fire2, 175,305);
+            }else{
+                isFiring = false;
+            }
+            if(whichRunner){
+                image(fireDino1, dinoX, dinoY-17);
+            }else{
+                image(fireDino2, dinoX, dinoY-17);
+            } 
+        }else{
+            if(whichRunner){
+                image(runningDino1, dinoX, dinoY);
+            }else{
+                image(runningDino2, dinoX, dinoY);
+            } 
+        }
+    }
+    if(isRunning)
+        dino_y_speed = dino_y_speed + GRAV;
+  
+    dinoY += dino_y_speed;
+    if(dinoY >= DINO_Y){
+        dinoY = DINO_Y;
+        dino_y_speed = 0;
+    }
+}
+
+
+
+void cactusControl(){
+    int randomInt = (int)random(0,3);
+    if(cactus0X < 0){ 
+        c0 = cacti.get(randomInt);
+        cactus0X = 4000;
+    }else if(cactus1X < 0){ 
+        c1 = cacti.get(randomInt);
+        cactus1X = 4000;
+    }else if(cactus2X < 0){ 
+        c2 = cacti.get(randomInt);
+        cactus2X = 4000;
+    }else if(cactus3X < 0){ 
+        c3 = cacti.get(randomInt );
+        cactus3X = 4000;
+    }
+ 
+    
+    image(c0, cactus0X, cactusY);
+    image(c1, cactus1X, cactusY);
+    image(c2, cactus2X, cactusY);
+    image(c3, cactus3X, cactusY);
+    if(isRunning){
+        cactus0X = cactus0X - 10;
+        cactus1X = cactus1X - 10;
+        cactus2X = cactus2X - 10;
+        cactus3X = cactus3X - 10;
+    }
+   
+ 
+    fill(0);
+    textSize(50);
+    //collision detection
+    if(dinoY == 330 && cactus0X < 190 && cactus0X > 45){
+        gameOver();
+    }else if(dinoY >= 230   && cactus0X < 170 && cactus0X > 45){
+         gameOver();
+    }else if(dinoY == 330 && cactus1X < 190 && cactus1X > 45){
+         gameOver();
+    }else if(dinoY >= 130   && cactus1X < 150 && cactus1X > 45){
+        gameOver();
+    }else if(dinoY == 330 && cactus2X < 190 && cactus2X > 45){
+       gameOver();
+    }else if(dinoY >= 230   && cactus2X < 170 && cactus2X > 45){
+        gameOver();
+    }else if(dinoY == 330 && cactus3X < 190 && cactus3X > 45){
+         gameOver();
+    }else if(dinoY >= 130   && cactus3X < 150 && cactus3X > 45){
+         gameOver();
+    }
+    
+}
+
+
+void birdControls(){
+     if(isRunning){
+        if(frameCount%30 == 0)
+            whichBird = true;//  !whichBird;
+        if(whichBird){
+            image(bird1, birdX, birdY);
+        }else{
+            image(bird2, birdX, birdY);
+        }
+       
+        birdX -= BIRD_SPEED;
+        if(birdX < 0){
+            birdY = (int)random(297,320);
+            birdX = 1800;
+        }
+    }else{
+        image(bird1, birdX, birdY);
+    }
+    fill(0);
+    textSize(50);
+    if(birdX < 0)
+        birdX = 1800;
+    if(isFiring){
+        if(birdY - dinoY <= 0 && birdY - dinoY >= -82 && birdX <= 300 && birdX >= 20)
+            birdX = 1800;
+        if(birdY - dinoY <= 67 && birdY - dinoY >= 0 && birdX <= 170 && birdX >= 50)
+            birdX = 1800;
+    }else if(isDucking){
+        if(birdY - dinoY <= 0 && birdY - dinoY >= -18 && birdX <= 200 && birdX >= 20)
+            gameOver();
+        if(birdY - dinoY <= 67 && birdY - dinoY >= 0 && birdX <= 170 && birdX >= 50)
+            gameOver();
+    }else{   
+        if(birdY - dinoY <= 0 && birdY - dinoY >= -82 && birdX <= 200 && birdX >= 20)
+            gameOver(); 
+        if(birdY - dinoY <= 67 && birdY - dinoY >= 0 && birdX <= 170 && birdX >= 50)
+            gameOver();
+        }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
