@@ -38,31 +38,30 @@ int cloud4Y = 120;
 float startFrame = 0;
 int fireTimer = 300;
 int highScore = 0;
-String cloudUrl = "https://i.ibb.co/sRd7b3g/Cloud.png";
-String fire1Url = "https://i.ibb.co/TLL7cSR/pt-Fireball1.png";
-String fire2Url = "https://i.ibb.co/grbnDbG/pt-Fireball2.png";
-String bgUrl = "https://i.ibb.co/0B27pQd/ground.png";
-String dinoStopUrl = "https://i.ibb.co/Gd0HFn8/tp-Dino-Stop.png";
-String runningDino1Url = "https://i.ibb.co/CVf4ddV/tprun-Dino1.png";
-String runningDino2Url = "https://i.ibb.co/37m0tDn/tprun-Dino2.png";
-String fireDino1Url = "https://i.ibb.co/fSjgz0f/tpfire-Dino1.png";
-String fireDino2Url = "https://i.ibb.co/560LXR1/tpfire-Dino2.png";
-String duckingDino1Url = "https://i.ibb.co/9svrs8b/tpducking-Dino1.png";
-String duckingDino2Url = "https://i.ibb.co/fS9NxVd/tpducking-Dino2.png";
-String deadDinoUrl  = "https://i.ibb.co/ZTJLx6P/tpdead-Dino.png";
-String resetGameUrl = "https://i.ibb.co/yRN4rLB/gameOver.png";
-String cactus0Url = "https://i.ibb.co/KzPxnXc/output-onlinepngtools-1.png";
-String cactus1Url = "https://i.ibb.co/R4VRxpg/output-onlinepngtools-2.png"; 
-String cactus2Url = "https://i.ibb.co/hXDCSZ6/output-onlinepngtools-3.png"; 
-String cactus3Url = "https://i.ibb.co/j6xGkR0/output-onlinepngtools.png";
-String bird1Url = "https://i.ibb.co/rk3YQKP/tpbird1.png";
-String bird2Url = "https://i.ibb.co/LZfT9yw/tpbird2.png";
+String cloudUrl = "img/Cloud.png";
+String fire1Url = "img/pt-Fireball1.png";
+String fire2Url = "img/pt-Fireball2.png";
+String bgUrl = "img/ground.png";
+String dinoStopUrl = "img/tp-Dino-Stop.png";
+String runningDino1Url = "img/tprun-Dino1.png";
+String runningDino2Url = "img/tprun-Dino2.png";
+String fireDino1Url = "img/tpfire-Dino1.png";
+String fireDino2Url = "img/tpfire-Dino2.png";
+String duckingDino1Url = "img/tpducking-Dino1.png";
+String duckingDino2Url = "img/tpducking-Dino2.png";
+String deadDinoUrl  = "img/tpdead-Dino.png";
+String resetGameUrl = "img/gameOver.png";
+String cactus0Url = "img/output-onlinepngtools-1.png";
+String cactus1Url = "img/output-onlinepngtools-2.png"; 
+String cactus2Url = "img/output-onlinepngtools-3.png"; 
+String cactus3Url = "img/output-onlinepngtools.png";
+String bird1Url = "img/tpbird1.png";
+String bird2Url = "img/tpbird2.png";
 PImage c0;
 PImage c1;
 PImage c2;
 PImage c3;
 PImage cloud;
-
 PImage bg;
 PImage dinoStop;
 PImage runningDino1;
@@ -82,8 +81,8 @@ PImage cactus2;
 PImage cactus3;
 PImage bird1;
 PImage bird2;
-ArrayList<PImage> cacti = new ArrayList<>();
-ArrayList<PImage> clouds = new ArrayList<>();
+ArrayList<PImage> cacti = new ArrayList();
+ArrayList<PImage> clouds = new ArrayList();
 
 void setup(){
     textAlign(CENTER, CENTER);
@@ -190,12 +189,12 @@ void draw(){
 } 
 void show_bg(){
     background(255);
-   image(bg,bgX, 188);
+   image(bg,bgX, 320);
    if(isRunning)
     bgX = bgX - 10;
         
     
-    image(bg, bgX + 1800, 188);
+    image(bg, bgX + 1800, 320);
     if(bgX == -1800)
         bgX = 0;
     
@@ -379,17 +378,3 @@ void birdControls(){
             gameOver();
         }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
