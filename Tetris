@@ -1,0 +1,149 @@
+float r = 0;
+int x = 0;
+int y = 0;
+int b = 40;//adjustable
+int columns = 10;//adjustable
+int rows = 20;//adjustable
+int T[][] = {
+{0,0,0,-1,-1,-1,-1,0},//smashboy
+{0,0,-1,0,0,-1,1,-1},//Rhode Island Z
+{0,0,0,-1,-1,-1,1,0},//Cleveland Z
+{0,0,0,-1,0,1,1,1},//Orange Ricky
+{0,0,0,-1,0,1,-1,1},//Blue Ricky
+{0,0,-1,0,1,0,0,-1},//teewee
+{0,0,-1,0,1,0,2,0}//hero
+};
+int s = (int)random(0,7);
+int[][] board = new int[columns][rows];
+float[] lims = {PI/2,PI,PI,2*PI,2*PI,2*PI,PI};
+void setup(){
+    strokeWeight(5);
+    size(b*columns,b*rows);//width half of height
+    rectMode(CENTER);
+}
+void draw(){
+    println(y);
+    fill(255);//draw white blocks
+    for(int i = 0; i < columns;i++){
+        for(int j = 0; j < rows;j++){
+            rect(i*b + b/2,j*b + b/2, b, b);
+        }
+    } 
+    //falling shape
+    fill(0);
+    pushMatrix();
+    translate(b*3 +b/2 + x, b*3 +b/2 + y);
+    rotate(r);
+    for(int i = 0; i < 4; i++){
+        rect(T[s][2*i]*b, T[s][2*i+1]*b, b, b);
+    }
+    popMatrix();   
+    //fixed shape
+    for(int i = 0; i < columns; i++){
+        for(int j = 0; j < rows; j++){
+            if(board[i][j] == 1)
+                rect(b/2 + i*b, b/2 + j*b, b, b);
+        }
+    }
+    rowCheck();
+    if(frameCount%rows == 0){
+        if(downCheck()){
+            y += b;
+        }else{
+            for(int i = 0; i < 4; i++){
+                int x1 = (int)(T[s][2*i]);
+                int y1 = (int)(T[s][2*i + 1]);
+                float x2 = (int)(x1*cos(r)) - (int)(y1*sin(r));
+                float y2 = (int)(x1*sin(r)) + (int)(y1*cos(r)); 
+                board[(int)(x2 + x/b + 3)][(int)(y2 + y/b + 3)] = 1;
+            }
+          
+            s = (int)random(0,7);
+            r = 0;
+            int leftLimit = 0;
+            int rightLimit = 0;
+            for(int i = 0; i < 4; i++){
+                rightLimit = max(rightLimit, T[s][2*i]);
+                rightLimit = min(rightLimit, T[s][2*i]); 
+            }
+            x = (int)random((-3-leftLimit), (columns-rightLimit-4))*b;
+            
+            if(y < 80){
+                for(int i = 0;i < columns;i++){
+                    for(int j = 0;j < rows;j++){
+                        board[i][j] = 0;
+                    }
+                }
+            }
+            y = 0;
+        }
+    }
+}
+void rowCheck(){
+    int startRow = 0;
+    for(int i = 0; i < rows;i++){
+        int count = 0;
+        for(int j = 0; j < columns;j++){
+            if(board[j][i]==1)
+                count++;
+    }
+    if(count == columns)
+        startRow = i;
+    } 
+    if(startRow != 0){
+        for(int row = startRow; row > 1; row--){
+            for(int col = 0; col < columns; col++){
+                board[col][row] = board[col][row-1];
+            }
+        }
+    }
+    startRow = 0;
+}
+//helper fcn to see if the piece can move down 
+boolean downCheck(){
+        for(int i = 0; i < 4;i++){
+            int x1 = (int)(3 + x/b - (int)(T[s][2*i + 1]*sin(r)) + (int)(T[s][2*i]*cos(r)));
+            int y1 = (int)(3 + y/b + (int)(T[s][2*i]*sin(r)) + (int)(T[s][2*i + 1]*cos(r)));
+            if(y1 < rows-1){
+                if(board[x1][y1+1] == 1){
+                    return false;
+                }
+            }
+            if(y1 >= rows - 1)
+                return false;
+        }
+    return true;  
+}
+void keyPressed(){
+        boolean canRotate = true;
+        boolean canGoRight = true;
+        boolean canGoLeft = true;
+        for(int i = 0; i < 4; i++){
+            int x1 = (int)(3 + x/b - (int)(T[s][2*i + 1]*sin(r)) + (int)(T[s][2*i]*cos(r)));
+            int y1 = (int)(3 + y/b - (int)(T[s][2*i]*sin(r)) + (int)(T[s][2*i + 1]*cos(r)));
+            if(keyCode == UP){
+                int xr = (int)(3 + x/b - (int)(T[s][2*i + 1]*sin(r - PI/2)) + (int)(T[s][2*i]*cos(r - PI/2)));
+                int yr = (int)(3 + y/b + (int)(T[s][2*i]*sin(r - PI/2)) + (int)(T[s][2*i + 1]*cos(r - PI/2)));  
+                if(yr > rows - 1 || xr > width/b - 1 ||  xr < 0) 
+                    canRotate = false;  
+            }
+            if(keyCode == RIGHT){
+                if(x1 == (width/b - 1) || board[x1 + 1][y1] == 1)
+                    canGoRight = false;
+            }
+            if(keyCode == LEFT){
+                if(x1 == 0 || board[x1][y1] == 1)
+                    canGoLeft = false;
+            }
+        }
+        if(canGoLeft && keyCode == LEFT)
+            x -= b;
+        if(canRotate && keyCode == UP)
+            r = (r - PI/2)%(lims[s]);
+        if(canGoRight && keyCode == RIGHT)
+            x += b;
+        if(keyCode == DOWN){
+            if(downCheck())
+                y += b;
+    }
+}
